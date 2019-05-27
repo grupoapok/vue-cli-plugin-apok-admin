@@ -1,0 +1,11 @@
+{
+  "name": "@apok/vue-cli-plugin-apok-admin",
+  "version": "1.0.0-rc.12",
+  "description": "Vue plugin to create apps using Apok Admin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
