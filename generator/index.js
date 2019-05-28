@@ -36,7 +36,7 @@ function updateEntryFile(api) {
 
 function updatePackage(api, options){
     let dependencies = {
-        "@apok/admin": "^0.1.1-rc.3",
+        "@apok/admin": "^0.1.1-rc.6",
         "@fortawesome/fontawesome-svg-core": "^1.2.18",
         "@fortawesome/free-regular-svg-icons": "^5.8.2",
         "@fortawesome/free-solid-svg-icons": "^5.8.2",
@@ -76,7 +76,7 @@ function updatePackage(api, options){
 
     dependencies = {
         ...dependencies,
-        [`@apok/admin-components-${options.cssFramework.toLowerCase()}`]: '^1.0.1-rc.5'
+        [`@apok/admin-components-${options.cssFramework.toLowerCase()}`]: '^1.0.1-rc.8'
     };
 
     api.extendPackage({
@@ -105,7 +105,7 @@ module.exports = (api, options) => {
         updateNetworkConfig(options);
         fixRoutesFile(options);
         updateEntryFile(api);
+    });
 
-        api.genJSConfig(options);
-    })
+    api.genJSConfig(options);
 };
