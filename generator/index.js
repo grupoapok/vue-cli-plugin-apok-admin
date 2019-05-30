@@ -1,7 +1,7 @@
 const { EOL } = require("os");
 const fs = require("fs");
 
-const mode = "dev";
+const mode = "prod";
 
 function updateNetworkConfig(adminConfigFile, options) {
   let adminConfigContent = fs.readFileSync(adminConfigFile, {encoding: "utf-8" });
@@ -33,8 +33,8 @@ function fixRoutesFile(options) {
 }
 
 function updatePackage(api, options) {
-  let apokAdminVersion = "^0.1.1-rc.6";
-  let apokAdminComponentsVersion = "^1.0.1-rc.8";
+  let apokAdminVersion = "^0.1.1-rc.7";
+  let apokAdminComponentsVersion = "^1.0.1-rc.9";
 
   const components = options.cssFramework.toLowerCase();
 
