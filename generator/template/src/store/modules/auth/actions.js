@@ -12,7 +12,7 @@ export const doLogin = (context, { username, password }) => {
     client_id: constants.CLIENT_ID,
     client_secret: constants.CLIENT_SECRET,
   };
-  Vue.$rest.executeVuexAction(context, LOGIN_USER, 'login', loginData, 'post')
+  Vue.$rest.executeVuexRequest(context, LOGIN_USER, 'login', loginData, 'post')
      .then(response => {
        Cookies.set(constants.SESSION_COOKIE, response.access_token);
        router.push({ name: 'Dashboard' });
@@ -25,7 +25,7 @@ export const doLogin = (context, { username, password }) => {
      });
 };
 
-export const getUser = (context) => Vue.$rest.executeVuexAction(context, GET_LOGGED_USER, 'profile');
+export const getUser = (context) => Vue.$rest.executeVuexRequest(context, GET_LOGGED_USER, 'profile');
 
 export const logout = ({ commit }) => {
   Cookies.remove(constants.SESSION_COOKIE);
