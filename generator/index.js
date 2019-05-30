@@ -34,7 +34,7 @@ function fixRoutesFile(options) {
 
 function updatePackage(api, options) {
   let apokAdminVersion = "^0.1.1-rc.7";
-  let apokAdminComponentsVersion = "^1.0.1-rc.11";
+  let apokAdminComponentsVersion = "^1.0.1-rc.12";
 
   const components = options.cssFramework.toLowerCase();
 
