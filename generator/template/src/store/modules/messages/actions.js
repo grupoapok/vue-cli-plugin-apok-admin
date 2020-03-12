@@ -5,6 +5,11 @@ import {
   SET_FIELDS,
 } from './types';
 
+/**
+ *
+ * @param context {Object} - Vuex instance context Object
+ * @param request
+ */
 export const sendMessage = (context, request) => {
   context.commit(SEND_MESSAGE, { ...request, id: new Date().getTime() });
 };
