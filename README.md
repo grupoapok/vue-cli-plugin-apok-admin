@@ -1,6 +1,8 @@
-#Apok-admin
+# Apok-admin
+
 The VueJS plugin for REST and GraphQL web client projects
-##Installation
+
+## Installation
 As a vue-cli plugin you need to install vue-cli tool using ``npm install``
 
 - ``npm install -g @vue/cli``
@@ -13,19 +15,19 @@ Now you need to install the plugin via ``vue add`` vue-cli console command
 
 - ``vue add @apok/apok-admin``
 
-##Usage
+## Usage
 after installation, the plugin will auto run and start asking the
 config question for the scaffold, however if you need to run the plugin
 again you can use ``vue invoke`` command instead:
 
 - ``vue invoke @apok/apok-admin``
 
-###Console commands
+### Console commands
 Apok-admin comes with build in commands for admin and vuex module 
 scaffolding that allows the user to add specific functions to their
 projects
 
-- ####``vuex:module`` command
+- #### ``vuex:module`` command
     this command generates a folder named as the module and also creates the files
     for this vuex module to work: the store, actions, mutations and an index.js
     to bundle everything up.
@@ -51,7 +53,7 @@ projects
      ```
      ***important note: `--actions` and ``--crud`` cannot be used in the same command line***
 
-- ####``admin:module`` command
+- #### ``admin:module`` command
     Similar to the previous one, this command also creates a folder named
     as the admin module name specified by the user but instead creates default
     views for the module: main, edit and list, a routes.js to handle the new 
