@@ -7,6 +7,7 @@ import {
 
 /**
  *
+ *@function sendMessage
  * @param context {Object} - Vuex instance context Object
  * @param request
  */
