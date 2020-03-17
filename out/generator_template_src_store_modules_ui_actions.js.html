@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: generator/template/src/store/ListTypes.js</title>
+    <title>JSDoc: Source: generator/template/src/store/modules/ui/actions.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: generator/template/src/store/ListTypes.js</h1>
+    <h1 class="page-title">Source: generator/template/src/store/modules/ui/actions.js</h1>
 
     
 
@@ -26,17 +26,23 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- *@file Constant names for Vuex modules
+            <pre class="prettyprint source linenums"><code>import TOGGLE_SIDEBAR from './types';
+
+/**
+ * @function showSidebar
+ * @param commit {Function} - destructured context.commit function
  */
-export const GET_ITEM_LIST = 'GET_ITEM_LIST';
-export const GET_ITEM = 'GET_ITEM';
-export const RESET_ITEM = 'RESET_ITEM';
-export const CHANGE_PAGE = 'CHANGE_PAGE';
-export const CHANGE_PAGE_SIZE = 'CHANGE_PAGE_SIZE';
-export const DELETE_ITEM = 'DELETE_ITEM';
-export const SAVE_ITEM = 'SAVE_ITEM';
-export const RESET_LIST = 'RESET_LIST';
+export const showSidebar = ({ commit }) => commit(TOGGLE_SIDEBAR, true);
+/**
+ * @function hideSidebar
+ * @param commit - destructured context.commit function
+ */
+export const hideSidebar = ({ commit }) => commit(TOGGLE_SIDEBAR, false);
+/**
+ * @function toggleSidebar
+ * @param commit {Function} - destructured context.commit function 
+ */
+export const toggleSidebar = ({ commit }) => commit(TOGGLE_SIDEBAR);
 </code></pre>
         </article>
     </section>
