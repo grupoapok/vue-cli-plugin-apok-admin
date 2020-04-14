@@ -111,6 +111,7 @@ function updatePackage(api, options) {
     };
   }
 
+  /*Chosen CSS Components*/
   dependencies = {
     ...dependencies,
     [`@apok/admin-components-${components}`]: apokAdminComponentsVersion
@@ -120,6 +121,8 @@ function updatePackage(api, options) {
   api.extendPackage({
     dependencies,
     devDependencies: {
+      "@vue/cli-plugin-unit-jest": "^4.2.3",
+      "@vue/test-utils": "1.0.0-beta.31",
       "postcss-import": "^12.0.1",
       "node-sass": "^4.9.0",
       "sass-loader": "^7.1.0"
