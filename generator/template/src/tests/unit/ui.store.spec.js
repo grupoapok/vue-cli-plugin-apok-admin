@@ -53,7 +53,6 @@ describe('showSidebar', () => {
         actions.toggleSidebar({commit});
         expect(commit).toBeCalledWith(TOGGLE_SIDEBAR);
     });
-
 });
 
 

@@ -97,3 +97,58 @@ describe('LOGOUT_USER', () => {
 
 /*ACTIONS*/
 
+describe('doLogin', () =>{
+  /*mocked functions*/
+  const context = {
+    dispatch: jest.fn(),
+    commit: jest.fn()
+  };
+  const executeVuexRequestMock = jest.spyOn(networkFunctions, 'executeVuexRequest');
+  jest.spyOn(Cookies, 'set');
+
+  it('correctly dispatches "getUser" and executes "Cookies.set" when "executeVuexRequest" resolves', async () => {
+    /*mocked resolve*/
+    executeVuexRequestMock.mockResolvedValueOnce({access_token: 'test_token'});
+
+    await actions.doLogin(context, {});
+    expect(context.dispatch).toBeCalledWith('getUser');
+    expect(Cookies.set).toBeCalledWith('apok.admin.session', 'test_token');
+  });
+
+  it('correctly dispatches "messages/setFields" when "executeVuexRequest" rejects', async () => {
+    /*mocked reject*/
+    executeVuexRequestMock.mockResolvedValueOnce(Promise.reject({status: 401, body: { message: 'test' }}));
+
+    await actions.doLogin(context, {});
+    expect(context.dispatch).toBeCalledWith('messages/setFields', {username: 'test'}, {root: true});
+  })
+});
+
+describe('getUser', () => {
+  /*mocked functions*/
+  const context = {
+    commit: jest.fn(),
+  };
+  const executeVuexRequestMock = jest.spyOn(networkFunctions, 'executeVuexRequest');
+  const executeRequestMock = jest.spyOn(networkFunctions, 'executeRequest');
+
+  it('correctly calls "executeVuexRequest" mutation', () => {
+    executeRequestMock.mockResolvedValueOnce({});
+    actions.getUser(context);
+    expect(executeVuexRequestMock).toBeCalledWith(context, GET_LOGGED_USER, 'profile')
+
+  })
+});
+
+describe('logout', () => {
+  /*mocked functions*/
+  const commit = jest.fn();
+  jest.spyOn(Cookies, 'remove');
+
+  it('successfully commits "LOGOUT_USER" and removes cookies', () => {
+
+    actions.logout({commit});
+    expect(Cookies.remove).toBeCalledWith('apok.admin.session');
+    expect(commit).toBeCalledWith(LOGOUT_USER);
+  })
+});
