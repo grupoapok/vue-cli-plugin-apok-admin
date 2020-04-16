@@ -1,20 +1,20 @@
-import {initialState, mutations} from "../mutations";
-import * as actions from "../actions";
+import {initialState, mutations} from "@/store/modules/ui/mutations";
+import * as actions from "@/store/modules/ui/actions";
 import Vuex from 'vuex';
 import {createLocalVue} from "@vue/test-utils";
-import TOGGLE_SIDEBAR from '../types';
+import TOGGLE_SIDEBAR from '@/store/modules/ui/types';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
 const store = new Vuex.Store({
-    state: initialState,
+    state: {...initialState},
     mutations: mutations,
     actions: actions,
 });
 
 /*MUTATIONS and STATE*/
 describe('TOGGLE_SIDEBAR', () => {
-    beforeEach(() => store.replaceState(initialState));
+    beforeEach(() => store.replaceState({...initialState}));
 
     it('sets sidebar state to true', () => {
         store.commit(TOGGLE_SIDEBAR, true);
@@ -26,9 +26,12 @@ describe('TOGGLE_SIDEBAR', () => {
         expect(store.state.sidebarExpanded).toBe(false);
     });
 
-    it('inverts sidebar state', () => {
+    it('inverts sidebar state from "true" to "false" and vice versa', () => {
         store.commit(TOGGLE_SIDEBAR, undefined);
         expect(store.state.sidebarExpanded).toBe(false);
+
+        store.commit(TOGGLE_SIDEBAR, undefined);
+        expect(store.state.sidebarExpanded).toBe(true);
     });
 });
 
@@ -53,6 +56,7 @@ describe('showSidebar', () => {
         actions.toggleSidebar({commit});
         expect(commit).toBeCalledWith(TOGGLE_SIDEBAR);
     });
+
 });
 
 

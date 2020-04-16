@@ -1,4 +1,5 @@
 import Vue from "vue";
+import * as networkFunctions from './networkFunctions'
 
 export const executeRequest = (url, params, method) => {
     const reqMethod = method.toLowerCase();
@@ -22,7 +23,7 @@ export const executeRequest = (url, params, method) => {
 
 export const executeVuexRequest = (context, action, url, params, method = "get") => {
     context.commit(action, { meta: "PENDING", data: params });
-    const reqPromise = executeRequest(url, params, method);
+    const reqPromise = networkFunctions.executeRequest(url, params, method);
     return new Promise((resolve, reject) => {
         reqPromise
             .then(response => {

@@ -1,8 +1,8 @@
-import {initialState, mutations} from "../mutations";
-import * as actions from "../actions";
+import {initialState, mutations} from "@/store/modules/messages/mutations";
+import * as actions from "@/store/modules/messages/actions";
 import Vuex from 'vuex';
 import {createLocalVue} from "@vue/test-utils";
-import {SET_FIELDS, DISMISS_MESSAGE, RESET_FIELDS, SEND_MESSAGE} from '../types';
+import {SET_FIELDS, DISMISS_MESSAGE, RESET_FIELDS, SEND_MESSAGE} from '@/store/modules/messages/types';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -88,6 +88,7 @@ describe('sendMessage', () => {
         actions.sendMessage({commit}, {prop: 'test prop'});
         expect(commit).toBeCalledWith(SEND_MESSAGE, {prop: 'test prop', id: 42});
         jest.restoreAllMocks();
+
     })
 });
 
@@ -105,6 +106,8 @@ describe('resetFields', () => {
     it('correctly commits "RESET_FIELDS" mutation', () => {
         actions.resetFields({commit});
         expect(commit).toBeCalledWith(RESET_FIELDS);
+        jest.restoreAllMocks();
+
     })
 });
 
@@ -114,6 +117,8 @@ describe('setFields', () => {
         let payload = 42;
         actions.setFields({commit}, payload);
         expect(commit).toBeCalledWith(SET_FIELDS, 42);
+        jest.restoreAllMocks();
+
     })
 });
 
