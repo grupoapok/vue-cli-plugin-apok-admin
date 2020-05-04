@@ -4,14 +4,13 @@
       <h1>404</h1>
       <p>This isn't the page you're looking for</p>
       <p>
-        <!--<icon-button @click="goBack" variant="info" icon="chevron-left">Go Back</icon-button>-->
+        <icon-button @click="goBack" variant="info" icon="chevron-left">Go Back</icon-button>
       </p>
     </div>
   </div>
 </template>
 
 <script>
-    // import IconButton from '../components/IconButton';
 
     export default {
         name: 'NotFoundPage',

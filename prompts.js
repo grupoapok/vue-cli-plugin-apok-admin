@@ -1,3 +1,6 @@
+/**
+ * @file Array of questions initial configuration trough prompts.js
+ */
 module.exports = [
     {
         name: 'cssFramework',
