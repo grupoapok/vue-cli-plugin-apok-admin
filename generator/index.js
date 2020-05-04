@@ -6,49 +6,83 @@ const { EOL } = require("os");
 const fs = require("fs");
 
 /** @const mode {String} - Production mode for current project*/
-const mode = "prod";
+const mode = "dev";
 
-/**
- *Updates the network configuration for the selected APIs
- * @function updateNetworkConfig
- * @method
- * @param adminConfigFile {String} - Path to the configuration file
- * @param options {Object} - Contains prompts.js answers
- */
-function updateNetworkConfig(adminConfigFile, options) {
-  let adminConfigContent = fs.readFileSync(adminConfigFile, {encoding: "utf-8" });
+function fixStyles(options) {
+  const stylesFile = './src/assets/main.scss';
 
-  let restConfig = "";
-  if (options.restClient) {
-    restConfig = `Vue.use(NetworkRestPlugin, {${EOL}\tbaseUrl: '${options.restBaseUrl}',${EOL}\tsessionCookie: constants.SESSION_COOKIE${EOL}});${EOL}`;
+  let content = "";
+
+  if (options.icons.indexOf('material') !== -1) {
+    content += "\n@import url('https://fonts.googleapis.com/icon?family=Material+Icons');";
+    content += "\n@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');";
   }
 
-  let graphConfig = "";
-  if (options.graphQLClient) {
-    graphConfig = `Vue.use(NetworkGraphQLPlugin, {${EOL}\tbaseUrl: '${options.graphBaseUrl}',${EOL}\tsessionCookie: constants.SESSION_COOKIE${EOL}});${EOL}`;
+  if (options.icons.indexOf('mdi') !== -1) {
+    content += "\n@import '~@mdi/font/scss/materialdesignicons';";
   }
 
-  adminConfigContent = adminConfigContent.replace("REST_CONFIG", restConfig);
-  adminConfigContent = adminConfigContent.replace("GRAPHQL_CONFIG", graphConfig);
+  if (options.cssFramework === 'bootstrap') {
+    content += "\n@import '~bootstrap/scss/bootstrap';";
+  }
+  if (options.cssFramework === 'bulma') {
+    content += "\n@import \"~bulma\";";
+  }
 
-  fs.writeFileSync(adminConfigFile, adminConfigContent, { encoding: "utf-8" });
+  fs.appendFileSync(stylesFile, content);
 }
 
-/**
- * Fixes routes inside of router.js
- * @param options {Object} - Contains prompts.js answers
- */
-function fixRoutesFile(options) {
+function iconDependencies(options) {
+  const deps = {};
+  if (options.indexOf('fontawesome') !== -1) {
+    deps["@fortawesome/fontawesome-svg-core"] = "^1.2.18";
+    deps["@fortawesome/free-regular-svg-icons"] = "^5.8.2";
+    deps["@fortawesome/free-solid-svg-icons"] = "^5.8.2";
+    deps["@fortawesome/vue-fontawesome"] = "^0.1.6";
+  }
+  if (options.indexOf('mdi') !== -1) {
+    deps["@mdi/font"] = "^3.6.95";
+  }
+  if (options.indexOf('unicons') !== -1) {
+    deps['vue-unicons'] = '^2.1.0';
+  }
+  return deps;
+}
 
-  /**Contains path to the main router*/
-  const routesFile = `./src/router.js`;
+function stylesDependencies(cssFramework) {
+  if (cssFramework === 'bootstrap') {
+    return {
+      'bootstrap': "^4.4.1"
+    }
+  }
+  if (cssFramework === 'bulma') {
+    return {
+      'bulma': '^0.8.2'
+    }
+  }
+}
 
-  let routesContent = fs.readFileSync(routesFile, { encoding: "utf-8" });
-  routesContent = routesContent.replace(
-    "%FRAMEWORK%",
-    options.cssFramework.toLowerCase()
-  );
-  fs.writeFileSync(routesFile, routesContent, { encoding: "utf-8" });
+function networkDependencies(options) {
+  let deps = {};
+  /**REST API dependencies*/
+  if (options.restClient) {
+    deps["vue-resource"] = "^1.5.1"
+  }
+
+  /**GraphQL API dependencies*/
+  if (options.graphQLClient) {
+    deps = {
+      ...deps,
+      "apollo-boost": "^0.3.1",
+      "apollo-cache-inmemory": "^1.5.1",
+      "apollo-client": "^2.5.1",
+      "apollo-link-error": "^1.1.10",
+      "apollo-link-http": "^1.5.14",
+      "graphql": "^14.3.0",
+      "graphql-tag": "^2.10.1"
+    };
+  }
+  return deps;
 }
 
 /**
@@ -82,12 +116,14 @@ function updatePackage(api, options) {
     "lodash.camelcase": "^4.3.0",
     "lodash.clonedeep": "^4.5.0",
     "moment": "^2.24.0",
+    ...iconDependencies(options.icons),
+    ...stylesDependencies(options.cssFramework),
+    ...networkDependencies(options),
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1",
     "vuex-i18n": "^1.11.0",
     "register-service-worker": "^1.6.2"
   };
-
 
   /**REST API dependencies*/
   if (options.restClient) {
@@ -133,8 +169,7 @@ function updatePackage(api, options) {
   });
 }
 
-
-module.exports = (api, options) =>  {
+module.exports = (api, options) => {
   updatePackage(api, options);
 
   api.render("./template");
@@ -145,23 +180,23 @@ module.exports = (api, options) =>  {
   api.injectRootOptions(api.entryFile, ["store", "router"]);
 
   const adminConfigFile = 'src/config/admin.js';
+  /*  if (options.restClient) {
+      api.injectImports(
+        adminConfigFile,
+        `import NetworkRestPlugin from "@apok/admin/vue/plugins/network/rest/NetworkRestPlugin";`
+      );
+    }
+    if (options.graphQLClient) {
+      api.injectImports(
+        adminConfigFile,
+        `import NetworkGraphQLPlugin from "@apok/admin/vue/plugins/network/graphql/NetworkGraphQLPlugin";`
+      );
+    }*/
 
-  if (options.restClient) {
-    api.injectImports(
-      adminConfigFile,
-      `import NetworkRestPlugin from "@apok/admin/vue/plugins/network/rest/NetworkRestPlugin";`
-    );
-  }
-  if (options.graphQLClient) {
-    api.injectImports(
-      adminConfigFile,
-      `import NetworkGraphQLPlugin from "@apok/admin/vue/plugins/network/graphql/NetworkGraphQLPlugin";`
-    );
-  }
+  api.exitLog('Done!!', 'done');
 
   api.onCreateComplete(() => {
-    updateNetworkConfig(adminConfigFile, options);
-    fixRoutesFile(options);
+    fixStyles(options);
   });
 
   //console.log(api.genJSConfig(options));

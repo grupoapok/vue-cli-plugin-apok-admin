@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Apok",
   "license": "ISC",
   "devDependencies": {
     "@vue/cli-plugin-unit-jest": "^4.2.3",
