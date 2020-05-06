@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Cookies from 'js-cookie';
 import constants from '@/config/constants';
 import { GET_LOGGED_USER, LOGIN_USER, LOGOUT_USER } from './types';
+import {executeVuexRequest} from '@/tests/unit/networkFunctions'
 
 /**
  * Login function via API REST
@@ -19,7 +20,7 @@ export const doLogin = (context, { username, password }) => {
     client_id: constants.CLIENT_ID,
     client_secret: constants.CLIENT_SECRET,
   };
-  Vue.prototype.$rest.executeVuexRequest(context, LOGIN_USER, 'login', loginData, 'post')
+  executeVuexRequest(context, LOGIN_USER, 'login', loginData, 'post')
      .then(response => {
        Cookies.set(constants.SESSION_COOKIE, response.access_token);
        context.dispatch('getUser');
@@ -37,7 +38,7 @@ export const doLogin = (context, { username, password }) => {
  * @param context {Object}- Vuex context Object
  * @returns {Promise}
  */
-export const getUser = (context) => Vue.prototype.$rest.executeVuexRequest(context, GET_LOGGED_USER, 'profile');
+export const getUser = (context) => executeVuexRequest(context, GET_LOGGED_USER, 'profile');
 
 /**
  *Method that removes session cookie and logs out an user
