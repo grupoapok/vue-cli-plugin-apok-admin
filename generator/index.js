@@ -99,7 +99,7 @@ function updatePackage(api, options) {
   const components = options.cssFramework.toLowerCase();
 
   if (mode === "dev") {
-    apokAdminVersion = "file:~/inventos/apok-admin";
+    apokAdminVersion = "file:~/plugin_nuevo/apok-admin";
     apokAdminComponentsVersion = `file:~/inventos/apok-admin-components-${components}`;
   }
 
