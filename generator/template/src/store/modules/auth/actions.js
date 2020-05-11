@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Cookies from 'js-cookie';
 import constants from '@/config/constants';
-import router from '@/router';
 import { GET_LOGGED_USER, LOGIN_USER, LOGOUT_USER } from './types';
 
 /**
@@ -23,7 +22,6 @@ export const doLogin = (context, { username, password }) => {
   Vue.prototype.$rest.executeVuexRequest(context, LOGIN_USER, 'login', loginData, 'post')
      .then(response => {
        Cookies.set(constants.SESSION_COOKIE, response.access_token);
-       router.push({ name: 'Dashboard' });
        context.dispatch('getUser');
      })
      .catch(error => {
@@ -49,5 +47,4 @@ export const getUser = (context) => Vue.prototype.$rest.executeVuexRequest(conte
 export const logout = ({ commit }) => {
   Cookies.remove(constants.SESSION_COOKIE);
   commit(LOGOUT_USER);
-  router.push({ name: 'Login' });
 };
