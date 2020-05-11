@@ -1,5 +1,9 @@
 import Vue from 'vue';
 
+/**
+ * Object that contains global constants for project
+ * @type {{PAGINATION_DATA: string, DEFAULT_LANG: (*|string), CLIENT_SECRET: *, PAGINATION_TOTAL_PAGES: string, API_URL: *, CLIENT_ID: *, PAGINATION_PER_PAGE: string, APP_NAME: (*|string), SESSION_COOKIE: (*|string), SHORT_APP_NAME: (*|string), PAGINATION_META: string, PAGINATION_CURRENT_PAGE: string}}
+ */
 const constants = {
   APP_NAME: process.env.VUE_APP_APP_NAME || 'Apok Admin',
   SHORT_APP_NAME: process.env.VUE_APP_SHORT_APP_NAME || 'AA',
