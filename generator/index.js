@@ -99,8 +99,8 @@ function updatePackage(api, options) {
   const components = options.cssFramework.toLowerCase();
 
   if (mode === "dev") {
-    apokAdminVersion = "file:~/plugin_nuevo/apok-admin";
-    apokAdminComponentsVersion = `file:~/inventos/apok-admin-components-${components}`;
+    apokAdminVersion = "file:../plugin_nuevo/apok-admin";
+    apokAdminComponentsVersion = `file:../plugin_nuevo/apok-admin-components-${components}`;
   }
 
   /**Apok-admin necessary dependencies*/
@@ -111,7 +111,7 @@ function updatePackage(api, options) {
     "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "@mdi/font": "^3.6.95",
-    "core-js": "^2.6.5",
+    "core-js": "^3.6.4",
     "js-cookie": "^2.2.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.clonedeep": "^4.5.0",
@@ -161,12 +161,27 @@ function updatePackage(api, options) {
       "@vue/test-utils": "1.0.0-beta.31",
       "postcss-import": "^12.0.1",
       "node-sass": "^4.9.0",
-      "sass-loader": "^7.1.0"
+      "sass-loader": "^7.1.0",
+      "@vue/cli-plugin-unit-jest": "^4.2.3",
+      "@vue/test-utils": "1.0.0-beta.31"
     },
     scripts: {
       create: "apok-admin-create"
     }
   });
+}
+
+function fixRoutesFile(options) {
+
+  /**Contains path to the main router*/
+  const routesFile = `./src/router.js`;
+
+  let routesContent = fs.readFileSync(routesFile, { encoding: "utf-8" });
+  routesContent = routesContent.replace(
+    "%FRAMEWORK%",
+    options.cssFramework.toLowerCase()
+  );
+  fs.writeFileSync(routesFile, routesContent, { encoding: "utf-8" });
 }
 
 module.exports = (api, options) => {
@@ -197,6 +212,7 @@ module.exports = (api, options) => {
 
   api.onCreateComplete(() => {
     fixStyles(options);
+    fixRoutesFile(options);
   });
 
   //console.log(api.genJSConfig(options));

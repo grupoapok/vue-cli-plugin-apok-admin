@@ -4,13 +4,13 @@
         <div class="column">
             <div class="card">
                 <div class="card-content">
-                    <admin-form
+                    <form-renderer
                             buttons-alignment="centered"
                             :fields="formFields"
                             :form-var="user"
                             :show-cancel="false"
-                            submit-button="Login"
-                            :submit-button-icon="null"
+                            submit-button-text="Login"
+                            submit-button-icon="arrow-circle-right"
                             :loading="loading"
                             @submit="doSubmit"
                     />

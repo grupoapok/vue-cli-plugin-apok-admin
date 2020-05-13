@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Cookies from 'js-cookie';
 import constants from '@/config/constants';
 import { GET_LOGGED_USER, LOGIN_USER, LOGOUT_USER } from './types';
