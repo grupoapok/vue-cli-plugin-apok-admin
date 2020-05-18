@@ -10,6 +10,7 @@ const mode = "dev";
 
 function fixStyles(options) {
   const stylesFile = './src/assets/main.scss';
+  const cssFrameworkStyle = './src/assets/_variables.scss';
 
   let content = "";
 
@@ -22,14 +23,21 @@ function fixStyles(options) {
     content += "\n@import '~@mdi/font/scss/materialdesignicons';";
   }
 
-  if (options.cssFramework === 'bootstrap') {
-    content += "\n@import '~bootstrap/scss/bootstrap';";
-  }
-  if (options.cssFramework === 'bulma') {
-    content += "\n@import \"~bulma\";";
-  }
-
+  // if (options.cssFramework === 'bootstrap') {
+  //   cssFrameworkStyleContent += "\n@import '~@apok/admin-components-bootstrap/assets/_variables';";
+  // }
+  // if (options.cssFramework === 'bulma') {
+  //   cssFrameworkStyleContent += "\n@import \"~bulma\";";
+  // }
   fs.appendFileSync(stylesFile, content);
+
+  let styleContent = fs.readFileSync(cssFrameworkStyle, { encoding: "utf-8" });
+  styleContent = styleContent.replace(
+    "%FRAMEWORK%",
+    options.cssFramework.toLowerCase()
+  );
+  fs.writeFileSync(cssFrameworkStyle, styleContent, { enconding: "utf-8" });
+
 }
 
 function iconDependencies(options) {
@@ -185,14 +193,23 @@ function fixRoutesFile(options) {
 }
 
 module.exports = (api, options) => {
+  const components = options.cssFramework[0].toUpperCase() + options.cssFramework.toLowerCase().slice(1);
   updatePackage(api, options);
 
   api.render("./template");
 
+  api.injectImports(api.entryFile, `import ${components}AdminComponents from '@apok/admin-components-${components.toLowerCase()}';`);
   api.injectImports(api.entryFile, `import './config/index';`);
   api.injectImports(api.entryFile, `import router from './router';`);
   api.injectImports(api.entryFile, `import store from './store/index';`);
   api.injectRootOptions(api.entryFile, ["store", "router"]);
+
+  api.afterInvoke(()=> {
+    let mainContent = fs.readFileSync(api.resolve(api.entryFile), {encoding: "utf-8"});
+    const newContent = `\n\nVue.use(${components}AdminComponents, {});\n`;
+    mainContent += newContent;
+    fs.writeFileSync(api.entryFile, mainContent, {enconding: "utf-8"});
+  })
 
   const adminConfigFile = 'src/config/admin.js';
   /*  if (options.restClient) {
