@@ -10,6 +10,7 @@ const mode = "dev";
 
 function fixStyles(options) {
   const stylesFile = './src/assets/main.scss';
+  const cssFrameworkStyle = './src/assets/_variables.scss';
 
   let content = "";
 
@@ -22,14 +23,21 @@ function fixStyles(options) {
     content += "\n@import '~@mdi/font/scss/materialdesignicons';";
   }
 
-  if (options.cssFramework === 'bootstrap') {
-    content += "\n@import '~bootstrap/scss/bootstrap';";
-  }
-  if (options.cssFramework === 'bulma') {
-    content += "\n@import \"~bulma\";";
-  }
-
+  // if (options.cssFramework === 'bootstrap') {
+  //   cssFrameworkStyleContent += "\n@import '~@apok/admin-components-bootstrap/assets/_variables';";
+  // }
+  // if (options.cssFramework === 'bulma') {
+  //   cssFrameworkStyleContent += "\n@import \"~bulma\";";
+  // }
   fs.appendFileSync(stylesFile, content);
+
+  let styleContent = fs.readFileSync(cssFrameworkStyle, { encoding: "utf-8" });
+  styleContent = styleContent.replace(
+    "%FRAMEWORK%",
+    options.cssFramework.toLowerCase()
+  );
+  fs.writeFileSync(cssFrameworkStyle, styleContent, { enconding: "utf-8" });
+
 }
 
 function iconDependencies(options) {
@@ -99,8 +107,8 @@ function updatePackage(api, options) {
   const components = options.cssFramework.toLowerCase();
 
   if (mode === "dev") {
-    apokAdminVersion = "file:~/inventos/apok-admin";
-    apokAdminComponentsVersion = `file:~/inventos/apok-admin-components-${components}`;
+    apokAdminVersion = "file:../plugin_nuevo/apok-admin";
+    apokAdminComponentsVersion = `file:../plugin_nuevo/apok-admin-components-${components}`;
   }
 
   /**Apok-admin necessary dependencies*/
@@ -111,7 +119,7 @@ function updatePackage(api, options) {
     "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "@mdi/font": "^3.6.95",
-    "core-js": "^2.6.5",
+    "core-js": "^3.6.4",
     "js-cookie": "^2.2.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.clonedeep": "^4.5.0",
@@ -161,7 +169,9 @@ function updatePackage(api, options) {
       "@vue/test-utils": "1.0.0-beta.31",
       "postcss-import": "^12.0.1",
       "node-sass": "^4.9.0",
-      "sass-loader": "^7.1.0"
+      "sass-loader": "^7.1.0",
+      "@vue/cli-plugin-unit-jest": "^4.2.3",
+      "@vue/test-utils": "1.0.0-beta.31"
     },
     scripts: {
       create: "apok-admin-create"
@@ -169,15 +179,37 @@ function updatePackage(api, options) {
   });
 }
 
+function fixRoutesFile(options) {
+
+  /**Contains path to the main router*/
+  const routesFile = `./src/router.js`;
+
+  let routesContent = fs.readFileSync(routesFile, { encoding: "utf-8" });
+  routesContent = routesContent.replace(
+    "%FRAMEWORK%",
+    options.cssFramework.toLowerCase()
+  );
+  fs.writeFileSync(routesFile, routesContent, { encoding: "utf-8" });
+}
+
 module.exports = (api, options) => {
+  const components = options.cssFramework[0].toUpperCase() + options.cssFramework.toLowerCase().slice(1);
   updatePackage(api, options);
 
   api.render("./template");
 
+  api.injectImports(api.entryFile, `import ${components}AdminComponents from '@apok/admin-components-${components.toLowerCase()}';`);
   api.injectImports(api.entryFile, `import './config/index';`);
   api.injectImports(api.entryFile, `import router from './router';`);
   api.injectImports(api.entryFile, `import store from './store/index';`);
   api.injectRootOptions(api.entryFile, ["store", "router"]);
+
+  api.afterInvoke(()=> {
+    let mainContent = fs.readFileSync(api.resolve(api.entryFile), {encoding: "utf-8"});
+    const newContent = `\n\nVue.use(${components}AdminComponents, {});\n`;
+    mainContent += newContent;
+    fs.writeFileSync(api.entryFile, mainContent, {enconding: "utf-8"});
+  })
 
   const adminConfigFile = 'src/config/admin.js';
   /*  if (options.restClient) {
@@ -197,6 +229,7 @@ module.exports = (api, options) => {
 
   api.onCreateComplete(() => {
     fixStyles(options);
+    fixRoutesFile(options);
   });
 
   //console.log(api.genJSConfig(options));
