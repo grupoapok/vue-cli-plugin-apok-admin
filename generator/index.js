@@ -137,7 +137,7 @@ function updatePackage(api, options) {
   if (options.restClient) {
     dependencies = {
       ...dependencies,
-      "vue-resource": "^1.5.1"
+      "axios": "^0.19.2",
     };
   }
 
@@ -150,7 +150,7 @@ function updatePackage(api, options) {
       "apollo-client": "^2.5.1",
       "apollo-link-error": "^1.1.10",
       "apollo-link-http": "^1.5.14",
-      graphql: "^14.3.0",
+      "graphql": "^14.3.0",
       "graphql-tag": "^2.10.1"
     };
   }
@@ -165,8 +165,7 @@ function updatePackage(api, options) {
   api.extendPackage({
     dependencies,
     devDependencies: {
-      "@vue/cli-plugin-unit-jest": "^4.2.3",
-      "@vue/test-utils": "1.0.0-beta.31",
+      "miragejs": "^0.1.40",
       "postcss-import": "^12.0.1",
       "node-sass": "^4.9.0",
       "sass-loader": "^7.1.0",
@@ -212,7 +211,7 @@ module.exports = (api, options) => {
   })
 
   const adminConfigFile = 'src/config/admin.js';
-  /*  if (options.restClient) {
+  if (options.restClient) {
       api.injectImports(
         adminConfigFile,
         `import NetworkRestPlugin from "@apok/admin/vue/plugins/network/rest/NetworkRestPlugin";`
@@ -223,7 +222,7 @@ module.exports = (api, options) => {
         adminConfigFile,
         `import NetworkGraphQLPlugin from "@apok/admin/vue/plugins/network/graphql/NetworkGraphQLPlugin";`
       );
-    }*/
+    }
 
   api.exitLog('Done!!', 'done');
 

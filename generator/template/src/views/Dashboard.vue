@@ -1,5 +1,9 @@
 <template>
-    <div>Dashboard</div>
+    <div>
+      <layout-renderer>
+        Dashboard
+      </layout-renderer>
+    </div>
 </template>
 
 <script>
