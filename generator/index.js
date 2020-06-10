@@ -169,7 +169,7 @@ function updatePackage(api, options) {
       "postcss-import": "^12.0.1",
       "node-sass": "^4.9.0",
       "sass-loader": "^7.1.0",
-      "@vue/cli-plugin-unit-jest": "^4.2.3",
+      "@vue/cli-plugin-unit-jest": "^4.4.1",
       "@vue/test-utils": "1.0.0-beta.31"
     },
     scripts: {
