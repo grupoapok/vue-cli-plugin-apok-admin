@@ -15,6 +15,6 @@ requireFeatureTranslations.keys().forEach((filename) => {
   Object.keys(featureTranslations).forEach(lang => {
     translations[lang][featureName] = featureTranslations[lang]
   })
-})
+});
 
 export default translations;

@@ -1,3 +1,6 @@
+/**
+ *@file Constant names for Vuex modules
+ */
 export const GET_ITEM_LIST = 'GET_ITEM_LIST';
 export const GET_ITEM = 'GET_ITEM';
 export const RESET_ITEM = 'RESET_ITEM';

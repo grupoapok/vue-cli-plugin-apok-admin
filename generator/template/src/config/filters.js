@@ -2,6 +2,9 @@
 import moment from 'moment';
 import Vue from 'vue';
 
+/**
+ * @File
+ */
 Vue.filter(
   'capitalize',
   val => `${val.slice(0, 1).toUpperCase()}${val.slice(1)}`
