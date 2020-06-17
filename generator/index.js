@@ -6,7 +6,7 @@ const { EOL } = require("os");
 const fs = require("fs");
 
 /** @const mode {String} - Production mode for current project*/
-const mode = "dev";
+const mode = "prod";
 
 function fixStyles(options) {
   const stylesFile = './src/assets/main.scss';
@@ -40,6 +40,33 @@ function fixStyles(options) {
 
 }
 
+function networkPluginInstall(adminConfigFile, options) {
+  let adminConfigContent = fs.readFileSync(adminConfigFile, {encoding: "utf-8" });
+
+  //REST client install and config
+  let restConfig = "";
+  if (options.restClient) {
+    restConfig = "Vue.use(NetworkRestPlugin, {\n" +
+      " baseURL: 'your api URL goes here',\n" +
+      " sessionCookie: constants.SESSION_COOKIE\n" +
+      "});\n";
+  }
+
+  //GraphQL client install and config
+  let graphConfig = "";
+  if (options.graphQLClient) {
+    graphConfig = "Vue.use(NetworkGraphQLPlugin, {\n" +
+      " baseURL: 'your api URL goes here',\n" +
+      " sessionCookie: constants.SESSION_COOKIE\n" +
+      "});\n";
+  }
+
+  adminConfigContent = adminConfigContent.replace("REST_CONFIG", restConfig);
+  adminConfigContent = adminConfigContent.replace("GRAPHQL_CONFIG", graphConfig);
+
+  fs.writeFileSync(adminConfigFile, adminConfigContent, { encoding: "utf-8" });
+}
+
 function iconDependencies(options) {
   const deps = {};
   if (options.indexOf('fontawesome') !== -1) {
@@ -69,12 +96,11 @@ function stylesDependencies(cssFramework) {
     }
   }
 }
-
 function networkDependencies(options) {
   let deps = {};
   /**REST API dependencies*/
   if (options.restClient) {
-    deps["vue-resource"] = "^1.5.1"
+    deps["axios"] = "^0.19.2"
   }
 
   /**GraphQL API dependencies*/
@@ -100,8 +126,8 @@ function networkDependencies(options) {
  * @param options {Object} - Contains prompts.js answers
  */
 function updatePackage(api, options) {
-  let apokAdminVersion = "^0.1.1-rc.7";
-  let apokAdminComponentsVersion = "^1.0.1-rc.12";
+  let apokAdminVersion = "^0.1.1-rc.8";
+  let apokAdminComponentsVersion = "^1.0.1-rc.13";
 
   /**Framework option chosen by user trough console*/
   const components = options.cssFramework.toLowerCase();
@@ -133,28 +159,6 @@ function updatePackage(api, options) {
     "register-service-worker": "^1.6.2"
   };
 
-  /**REST API dependencies*/
-  if (options.restClient) {
-    dependencies = {
-      ...dependencies,
-      "axios": "^0.19.2",
-    };
-  }
-
-  /**GraphQL API dependencies*/
-  if (options.graphQLClient) {
-    dependencies = {
-      ...dependencies,
-      "apollo-boost": "^0.3.1",
-      "apollo-cache-inmemory": "^1.5.1",
-      "apollo-client": "^2.5.1",
-      "apollo-link-error": "^1.1.10",
-      "apollo-link-http": "^1.5.14",
-      "graphql": "^14.3.0",
-      "graphql-tag": "^2.10.1"
-    };
-  }
-
   /*Chosen CSS Components*/
   dependencies = {
     ...dependencies,
@@ -170,7 +174,7 @@ function updatePackage(api, options) {
       "node-sass": "^4.9.0",
       "sass-loader": "^7.1.0",
       "@vue/cli-plugin-unit-jest": "^4.4.1",
-      "@vue/test-utils": "1.0.0-beta.31"
+      "@vue/test-utils": "^1.0.3"
     },
     scripts: {
       create: "apok-admin-create"
@@ -179,7 +183,6 @@ function updatePackage(api, options) {
 }
 
 function fixRoutesFile(options) {
-
   /**Contains path to the main router*/
   const routesFile = `./src/router.js`;
 
@@ -229,6 +232,7 @@ module.exports = (api, options) => {
   api.onCreateComplete(() => {
     fixStyles(options);
     fixRoutesFile(options);
+    networkPluginInstall(adminConfigFile, options)
   });
 
   //console.log(api.genJSConfig(options));

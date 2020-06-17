@@ -1,9 +1,7 @@
 <template>
-    <div>
-      <layout-renderer>
-        Dashboard
-      </layout-renderer>
-    </div>
+  <div>
+    Dashboard
+  </div>
 </template>
 
 <script>
