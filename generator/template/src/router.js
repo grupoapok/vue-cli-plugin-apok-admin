@@ -30,7 +30,7 @@ const router = new Router({
         },
         {
             path: "/admin",
-            component: () => import(/* webpackChunkName: "admin-layout" */ "@apok/admin-components-%FRAMEWORK%/components/Layout" ),
+            component: () => import(/* webpackChunkName: "admin-layout" */ "./views/MainLayout" ),
             meta: { requiresAuth: true },
             children: [
                 {
