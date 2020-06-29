@@ -6,7 +6,7 @@ const { EOL } = require("os");
 const fs = require("fs");
 
 /** @const mode {String} - Production mode for current project*/
-const mode = "dev";
+const mode = "prod";
 
 function fixStyles(options) {
   const stylesFile = './src/assets/main.scss';
