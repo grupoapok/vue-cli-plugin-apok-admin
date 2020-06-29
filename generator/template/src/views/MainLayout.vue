@@ -19,7 +19,7 @@
     data(){
       return {
         menu,
-        expanded: false,
+        expanded: true,
         navbarProps: {
           title: 'Apok-admin Navigator',
           shortTitle: 'Apok-admin',

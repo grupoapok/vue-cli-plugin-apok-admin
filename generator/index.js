@@ -6,7 +6,7 @@ const { EOL } = require("os");
 const fs = require("fs");
 
 /** @const mode {String} - Production mode for current project*/
-const mode = "prod";
+const mode = "dev";
 
 function fixStyles(options) {
   const stylesFile = './src/assets/main.scss';
@@ -20,15 +20,10 @@ function fixStyles(options) {
   }
 
   if (options.icons.indexOf('mdi') !== -1) {
+    content += "\n$mdi-font-path: '~@mdi/font/fonts';";
     content += "\n@import '~@mdi/font/scss/materialdesignicons';";
   }
 
-  // if (options.cssFramework === 'bootstrap') {
-  //   cssFrameworkStyleContent += "\n@import '~@apok/admin-components-bootstrap/assets/_variables';";
-  // }
-  // if (options.cssFramework === 'bulma') {
-  //   cssFrameworkStyleContent += "\n@import \"~bulma\";";
-  // }
   fs.appendFileSync(stylesFile, content);
 
   let styleContent = fs.readFileSync(cssFrameworkStyle, { encoding: "utf-8" });
