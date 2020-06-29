@@ -19,17 +19,7 @@ export const doLogin = (context, { username, password }) => {
     client_id: constants.CLIENT_ID,
     client_secret: constants.CLIENT_SECRET,
   };
-
-  vue.$rest.executeVuexRequest(context, LOGIN_USER, 'login', loginData, 'post')
-    .then(response => {
-      Cookies.set(constants.SESSION_COOKIE, response.access_token);
-      context.dispatch('getUser');
-    })
-    .catch(error => {
-      if (error.status === 401) {
-        context.dispatch('messages/setFields', { username: error.body.message }, { root: true });
-      }
-    });
+  return vue.$rest.executeVuexRequest(context, LOGIN_USER, 'login', loginData, 'post')
 };
 
 /**
