@@ -121,8 +121,8 @@ function networkDependencies(options) {
  * @param options {Object} - Contains prompts.js answers
  */
 function updatePackage(api, options) {
-  let apokAdminVersion = "^0.1.1-rc.8";
-  let apokAdminComponentsVersion = "^1.0.1-rc.13";
+  let apokAdminVersion = "^0.1.1-rc.10";
+  let apokAdminComponentsVersion = "^1.0.1-rc.15";
 
   /**Framework option chosen by user trough console*/
   const components = options.cssFramework.toLowerCase();
