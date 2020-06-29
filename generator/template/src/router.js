@@ -30,7 +30,7 @@ const router = new Router({
         },
         {
             path: "/admin",
-            component: () => import(/* webpackChunkName: "admin-layout" */ "@apok/admin-components-%FRAMEWORK%/components/Layout" ),
+            component: () => import(/* webpackChunkName: "admin-layout" */ "./views/MainLayout" ),
             meta: { requiresAuth: true },
             children: [
                 {
@@ -40,31 +40,28 @@ const router = new Router({
                 },
                 ...childRoutes,
                 {
+                  path: '/about',
+                  name: 'About',
+                  component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+                },
+                {
                     path: "*",
                     component: () => import(/* webpackChunkName: "not-found" */ "./views/NotFoundPage")
                 }
             ]
         },
         {
-            path: '/about',
-            name: 'about',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-        },
-        {
             path: "*",
             component: () => import(/* webpackChunkName: "not-found" */ "./views/NotFoundPage")
         }
     ]
-})
+});
 
 router.beforeEach((to, from, next) => {
     if (to.path.startsWith("/admin")) {
         const token = Cookies.get(constants.SESSION_COOKIE);
         if (!token) {
-            next({ name: "Login" });
+            //next({ name: "Login" });
         }
     }
     next();
