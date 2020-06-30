@@ -103,10 +103,10 @@
 </template>
 
 <script>
-  import ChartBar from "../components/ChartBar";
-  import ChartLine from "../components/ChartLine";
-  import ChartRadar from "../components/ChartRadar";
-  import ChartBubble from "../components/ChartBubble";
+  import ChartBar from "../components/charts/ChartBar";
+  import ChartLine from "../components/charts/ChartLine";
+  import ChartRadar from "../components/charts/ChartRadar";
+  import ChartBubble from "../components/charts/ChartBubble";
   export default {
     name: 'Dashboard',
     data(){
