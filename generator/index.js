@@ -6,7 +6,7 @@ const { EOL } = require("os");
 const fs = require("fs");
 
 /** @const mode {String} - Production mode for current project*/
-const mode = "prod";
+const mode = "dev";
 
 function fixStyles(options) {
   const stylesFile = './src/assets/main.scss';
@@ -144,6 +144,7 @@ function updatePackage(api, options) {
     "js-cookie": "^2.2.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.clonedeep": "^4.5.0",
+    "lodash.chunk": "^4.2.0",
     "moment": "^2.24.0",
     ...iconDependencies(options.icons),
     ...stylesDependencies(options.cssFramework),
@@ -151,7 +152,9 @@ function updatePackage(api, options) {
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1",
     "vuex-i18n": "^1.11.0",
-    "register-service-worker": "^1.6.2"
+    "register-service-worker": "^1.6.2",
+    "vue-chartjs": "^3.5.0",
+    "chart.js": "^2.9.3"
   };
 
   /*Chosen CSS Components*/

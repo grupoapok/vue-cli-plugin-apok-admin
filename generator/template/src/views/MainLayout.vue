@@ -3,6 +3,7 @@
     :menu="menu"
     :sidebar-expanded="expanded"
     :navbar-props="navbarProps"
+    @logout-confirmed="doLogout"
     @toggle-sidebar="expanded = !expanded"
     :user="user"
   >
@@ -12,7 +13,7 @@
 
 <script>
   import menu from '@/config/menu'
-  import { mapState } from 'vuex'
+  import {mapActions, mapState} from 'vuex'
 
   export default {
     name: "MainLayout",
@@ -24,11 +25,15 @@
           title: 'Apok-admin Navigator',
           shortTitle: 'Apok-admin',
         },
-
-
       }
     },
-
+    methods: {
+      ...mapActions('auth', ['logout']),
+      doLogout() {
+        this.logout();
+        this.$router.push({name: 'Login'})
+      }
+    },
     computed: {
       ...mapState('auth', ['user']),
     },

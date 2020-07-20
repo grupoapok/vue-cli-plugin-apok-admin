@@ -59,8 +59,9 @@
     },
     methods: {
       ...mapActions('auth', ['doLogin', 'getUser']),
-      ...mapActions('messages', ['setFields']),
+      ...mapActions('messages', ['setFields', 'resetFields']),
       doSubmit() {
+        this.resetFields();
         this.doLogin({
           username: this.user.username,
           password: this.user.password
@@ -71,16 +72,16 @@
             this.$router.push({name: 'Dashboard'});
           })
           .catch(error => {
-            console.log(error.response);
-            if(error.response.status >= 400 && error.response.status < 500){
-              this.setFields({ username: "An error has ocurred: " + error.response.statusText }, {root: true});
-            }else{
+            if(error.response.status >= 500){
               console.log("Server Error");
+            }else if(error.response.status === 422){
+              this.setFields({ username: error.response.data.message });
+            }else{
+              console.log(error.response.data.message)
             }
+            this.user.password = "";
 
           })
-
-
       }
     },
   };
