@@ -19,17 +19,6 @@ export default [
         icon: {icon: 'sign-in-alt'}
       },
 
-      {
-        label: 'Components',
-        to: { name: 'About' },
-        icon: {icon: 'puzzle-piece'}
-      },
-      {
-        label: 'Charts',
-        to: { name: 'About' },
-        icon: {icon: 'cog'},
-      },
-
     ]
   },
 ]

@@ -1,114 +1,37 @@
 <template>
-  <div class="column">
-    <div class="title-container">
-      <section class="hero is-link is-bold">
-        <div class="hero-body">
-          <h1 class="title is-3">
-            Dashboard
-          </h1>
-        </div>
-      </section>
-    </div>
-
-
-    <div class="columns is-multiline">
-      <div class="column">
-        <div class="card">
-          <div class="card-content">
-            <div class="media">
-              <p class="card-header-title title is-4">Card Title</p>
-            </div>
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Phasellus nec iaculis mauris.
-            </div>
-          </div>
-        </div>
+  <dashboard-renderer :rows="2" :columns="2" :sample="true">
+    <template slot="tile_1_1">
+      <div class="box">
+        <chart-bar :style="chartStyle"/>
       </div>
-
-      <div class="column">
-        <div class="card">
-          <div class="card-content">
-            <p class="card-header-title title is-4">Card Title</p>
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Phasellus nec iaculis mauris.
-            </div>
-          </div>
-        </div>
+    </template>
+    <template slot="tile_1_2">
+      <div class="box">
+        <chart-line :style="chartStyle"/>
       </div>
-
-      <div class="column">
-        <div class="card">
-          <div class="card-content">
-            <p class="card-header-title title is-4">Card Title</p>
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Phasellus nec iaculis mauris.
-            </div>
-          </div>
-        </div>
+    </template>
+    <template slot="tile_2_1">
+      <div class="box">
+        <chart-radar :style="chartStyle"/>
       </div>
-
-      <div class="column">
-        <div class="card">
-          <div class="card-content">
-            <p class="card-header-title title is-4">Card Title</p>
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Phasellus nec iaculis mauris.
-            </div>
-          </div>
-        </div>
+    </template>
+    <template slot="tile_2_2">
+      <div class="box">
+        <chart-bubble :style="chartStyle"/>
       </div>
-    </div>
+    </template>
 
-    <div class="columns is-multiline">
-
-      <div class="column">
-        <div class="box">
-          <div>
-            <chart-bar :style="chartStyle"/>
-          </div>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="box">
-          <div>
-            <chart-line :style="chartStyle"/>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="columns is-multiline">
-      <div class="column">
-        <div class="box">
-          <div>
-            <chart-radar :style="chartStyle"/>
-          </div>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="box">
-          <div>
-            <chart-bubble :style="chartStyle"/>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  </dashboard-renderer>
 </template>
 
 <script>
-  import ChartBar from "../components/charts/ChartBar";
-  import ChartLine from "../components/charts/ChartLine";
-  import ChartRadar from "../components/charts/ChartRadar";
-  import ChartBubble from "../components/charts/ChartBubble";
+  import ChartBar from "@/components/charts/ChartBar";
+  import ChartLine from "@/components/charts/ChartLine";
+  import ChartRadar from "@/components/charts/ChartRadar";
+  import ChartBubble from "@/components/charts/ChartBubble";
+
   export default {
-    name: 'Dashboard',
+    name: "DashboardTest",
     data(){
       return {
         chartStyle: {
@@ -117,14 +40,13 @@
         }
       }
     },
-    components: {ChartBar, ChartLine, ChartRadar, ChartBubble},
+    components: { ChartBubble, ChartRadar, ChartLine, ChartBar},
   }
 </script>
 
-<style>
-
-  .title-container {
-    padding-bottom: 32px;
+<style lang="scss" scoped>
+  .dashboard-container {
+    padding: 12px;
   }
 
 </style>
