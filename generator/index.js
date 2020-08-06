@@ -13,6 +13,18 @@ function fixStyles(options) {
   const cssFrameworkStyle = './src/assets/_variables.scss';
 
   let content = "";
+  content += `\n@import '~@apok/admin-components-${options.cssFramework.toLowerCase()}/assets/components';`;
+
+  switch(options.cssFramework.toLowerCase()){
+    case 'bootstrap': {
+      content += "\n@import '~bootstrap/dist/css/bootstrap.css';\n";
+      break;
+    }
+    case 'bulma': {
+      content += "\n@import '~bulma/css/bulma.css';\n";
+      break;
+    }
+  }
 
   if (options.icons.indexOf('material') !== -1) {
     content += "\n@import url('https://fonts.googleapis.com/icon?family=Material+Icons');";
@@ -32,7 +44,6 @@ function fixStyles(options) {
     options.cssFramework.toLowerCase()
   );
   fs.writeFileSync(cssFrameworkStyle, styleContent, { enconding: "utf-8" });
-
 }
 
 function networkPluginInstall(adminConfigFile, options) {
@@ -203,13 +214,7 @@ module.exports = (api, options) => {
   api.injectImports(api.entryFile, `import router from './router';`);
   api.injectImports(api.entryFile, `import store from './store/index';`);
   api.injectRootOptions(api.entryFile, ["store", "router"]);
-
-  api.afterInvoke(()=> {
-    let mainContent = fs.readFileSync(api.resolve(api.entryFile), {encoding: "utf-8"});
-    const newContent = `\n\nVue.use(${components}AdminComponents, {});\n`;
-    mainContent += newContent;
-    fs.writeFileSync(api.entryFile, mainContent, {enconding: "utf-8"});
-  })
+  fs.writeFileSync(api.entryFile, `\n\nVue.use(${components}AdminComponents, {});\n`);
 
   const adminConfigFile = 'src/config/admin.js';
   if (options.restClient) {
