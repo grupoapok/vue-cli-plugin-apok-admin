@@ -72,9 +72,10 @@ function fixStyles(options) {
   fs.writeFileSync(cssFrameworkStyle, styleContent, { enconding: "utf-8" });
 }
 
-function chartDependencies(charts) {
+function chartDependencies(charts, apokAdminChartVersion) {
   let deps = {};
   if(charts){
+    deps["@apok/admin-charts"] = apokAdminChartVersion;
     deps["vue-chartjs"] = "^3.5.0";
     deps["chart.js"] = "^2.9.3";
   }
@@ -171,6 +172,7 @@ function networkDependencies(options) {
 function updatePackage(api, options) {
   let apokAdminVersion = "^0.1.1-rc.10";
   let apokAdminComponentsVersion = "^1.0.1-rc.15";
+  let apokAdminChartsVersion = "^1.0.0-rc.1";
 
   /**Framework option chosen by user trough console*/
   const components = options.cssFramework.toLowerCase();
@@ -178,6 +180,7 @@ function updatePackage(api, options) {
   if (mode === "dev") {
     apokAdminVersion = "file:../plugin_nuevo/apok-admin";
     apokAdminComponentsVersion = `file:../plugin_nuevo/apok-admin-components-${components}`;
+    apokAdminChartsVersion = "file:../plugin_nuevo/apok-admin-charts";
   }
 
   /**Apok-admin necessary dependencies*/
@@ -196,7 +199,7 @@ function updatePackage(api, options) {
     ...iconDependencies(options.icons),
     ...stylesDependencies(options.cssFramework),
     ...networkDependencies(options),
-    ...chartDependencies(options.charts),
+    ...chartDependencies(options.charts, apokAdminChartsVersion),
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1",
     "vuex-i18n": "^1.11.0",
@@ -245,6 +248,9 @@ module.exports = (api, options) => {
   api.render("./template");
 
   api.injectImports(api.entryFile, `import ${components}AdminComponents from '@apok/admin-components-${components.toLowerCase()}';`);
+  if(options.charts){
+    api.injectImports(api.entryFile, `import ChartAdminComponent from '@apok/admin-charts';`);
+  }
   api.injectImports(api.entryFile, `import './config/index';`);
   api.injectImports(api.entryFile, `import router from './router';`);
   api.injectImports(api.entryFile, `import store from './store/index';`);
