@@ -47,4 +47,10 @@ module.exports = [
     message: 'Will you use GraphQL?',
     default: false,
   },
+  {
+    name: 'charts',
+    type: 'confirm',
+    message: 'Will you use charts? (vue-chartjs)',
+    default: true,
+  },
 ];

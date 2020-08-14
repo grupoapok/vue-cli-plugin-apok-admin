@@ -22,8 +22,8 @@
         menu,
         expanded: true,
         navbarProps: {
-          title: 'Apok-admin Navigator',
-          shortTitle: 'Apok-admin',
+          title: 'Apok-admin',
+          shortTitle: 'Admin',
         },
       }
     },
@@ -40,6 +40,6 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

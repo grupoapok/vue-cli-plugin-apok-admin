@@ -46,16 +46,22 @@ const router = new Router({
                 },
                 {
                     path: "*",
-                    component: () => import(/* webpackChunkName: "not-found" */ "./views/NotFoundPage")
+                    redirect: { name: 'NotFoundPage' }
                 }
             ]
         },
         {
             path: "*",
+            name: 'NotFoundPage',
             component: () => import(/* webpackChunkName: "not-found" */ "./views/NotFoundPage")
         }
     ]
 });
+
+/* This is a auth validation that checks if the user is logged in
+in order to allow access to the admin page and its children. You can
+always implement your own auth method, however, this one serves it's
+purpose */
 
 router.beforeEach((to, from, next) => {
     if (to.path.startsWith("/admin")) {
