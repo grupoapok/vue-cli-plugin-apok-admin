@@ -19,7 +19,9 @@ function fixStyles(options) {
       break;
     }
     case 'bulma': {
-      content += "\n@import '~bulma/css/bulma.css';\n";
+      content +=
+        "\n@import '~bulma/bulma';" +
+        "\n@import '~buefy/dist/buefy.css';\n";
       break;
     }
   }
@@ -136,7 +138,8 @@ function stylesDependencies(cssFramework) {
   }
   if (cssFramework === 'bulma') {
     return {
-      'bulma': '^0.8.2'
+      'bulma': '^0.9.0',
+      'buefy': '^0.9.0'
     }
   }
 }
