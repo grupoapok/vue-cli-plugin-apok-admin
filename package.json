@@ -1,6 +1,6 @@
 {
   "name": "@apok/vue-cli-plugin-apok-admin",
-  "version": "1.0.0-rc.26",
+  "version": "1.0.0-rc.27",
   "repository": "https://github.com/grupoapok/vue-cli-plugin-apok-admin",
   "description": "Vue plugin to create apps using Apok Admin",
   "main": "index.js",
