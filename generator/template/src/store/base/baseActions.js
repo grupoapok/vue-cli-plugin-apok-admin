@@ -9,7 +9,6 @@ import {
   RESET_LIST,
   SAVE_ITEM,
 } from '@/store/ListTypes';
-import { processError } from "@/utils/functions";
 
 export const getItemList = (context, params) =>
   Vue.$rest.executeVuexRequest(
@@ -20,7 +19,7 @@ export const getItemList = (context, params) =>
 
 export const getItem = (context, id) =>
   Vue.$rest.executeVuexRequest(context, GET_ITEM, `CHANGE_ME/${id}`)
-    .catch(error => processError(context, error));
+    .catch(error => console.log(context, error));
 
 export const saveItem = (context, object) => {
   let method = 'POST';
@@ -40,7 +39,7 @@ export const saveItem = (context, object) => {
         resolve(response);
       })
       .catch(error => {
-        processError(context, error);
+        console.log(context, error);
         reject(error);
       });
   });

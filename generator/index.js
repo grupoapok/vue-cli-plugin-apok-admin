@@ -12,7 +12,19 @@ function fixStyles(options) {
   const stylesFile = './src/assets/main.scss';
   const cssFrameworkStyle = './src/assets/_variables.scss';
 
-  let content = "";
+  let content = `\n@import '~@apok/admin-components-${options.cssFramework.toLowerCase()}/assets/components';`;
+  switch(options.cssFramework.toLowerCase()){
+    case 'bootstrap': {
+      content += "\n@import '~bootstrap/dist/css/bootstrap.css';\n";
+      break;
+    }
+    case 'bulma': {
+      content +=
+        "\n@import '~bulma/bulma';" +
+        "\n@import '~buefy/dist/buefy.css';\n";
+      break;
+    }
+  }
 
   if (options.icons.indexOf('material') !== -1) {
     content += "\n@import url('https://fonts.googleapis.com/icon?family=Material+Icons');";
@@ -23,8 +35,36 @@ function fixStyles(options) {
     content += "\n$mdi-font-path: '~@mdi/font/fonts';";
     content += "\n@import '~@mdi/font/scss/materialdesignicons';";
   }
-
   fs.appendFileSync(stylesFile, content);
+
+
+  if(options.icons.indexOf('fontawesome') !== -1) {
+    fs.appendFileSync('src/config/index.js', "import './fontawesome';\n");
+    fs.writeFileSync( 'src/config/fontawesome.js',
+      'import Vue from \'vue\';\n' +
+      'import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";\n' +
+      'import { library } from "@fortawesome/fontawesome-svg-core";\n' +
+      'import { far } from "@fortawesome/free-regular-svg-icons";\n' +
+      'import { fas } from "@fortawesome/free-solid-svg-icons";\n\n' +
+      'library.add(far, fas);\n\n' +
+      'Vue.component(\'font-awesome-icon\', FontAwesomeIcon);'
+    )
+  }
+
+  if(options.icons.indexOf('unicons') !== -1) {
+    fs.appendFileSync('src/config/index.js', "import './unicons';\n");
+    fs.writeFileSync( 'src/config/unicons.js',
+      'import Vue from \'vue\'\n' +
+      'import Unicon from \'vue-unicons\'\n' +
+      'import * as Icons from \'vue-unicons/src/icons\'\n\n' +
+      'let iconsForImport = [];\n' +
+      'for(const icon in Icons){\n' +
+      '\ticonsForImport.push(Icons[icon])\n' +
+      '}\n\n' +
+      'Unicon.add(iconsForImport);\n' +
+      'Vue.use(Unicon);'
+    )
+  }
 
   let styleContent = fs.readFileSync(cssFrameworkStyle, { encoding: "utf-8" });
   styleContent = styleContent.replace(
@@ -32,7 +72,16 @@ function fixStyles(options) {
     options.cssFramework.toLowerCase()
   );
   fs.writeFileSync(cssFrameworkStyle, styleContent, { enconding: "utf-8" });
+}
 
+function chartDependencies(charts, apokAdminChartVersion) {
+  let deps = {};
+  if(charts){
+    deps["@apok/admin-charts"] = apokAdminChartVersion;
+    deps["vue-chartjs"] = "^3.5.0";
+    deps["chart.js"] = "^2.9.3";
+  }
+  return deps;
 }
 
 function networkPluginInstall(adminConfigFile, options) {
@@ -41,18 +90,20 @@ function networkPluginInstall(adminConfigFile, options) {
   //REST client install and config
   let restConfig = "";
   if (options.restClient) {
-    restConfig = "Vue.use(NetworkRestPlugin, {\n" +
-      " baseURL: 'your api URL goes here',\n" +
-      " sessionCookie: constants.SESSION_COOKIE\n" +
+    restConfig =
+      "Vue.use(NetworkRestPlugin, {\n" +
+      "\tbaseURL: 'your api URL goes here',\n" +
+      "\tsessionCookie: constants.SESSION_COOKIE\n" +
       "});\n";
   }
 
   //GraphQL client install and config
   let graphConfig = "";
   if (options.graphQLClient) {
-    graphConfig = "Vue.use(NetworkGraphQLPlugin, {\n" +
-      " baseURL: 'your api URL goes here',\n" +
-      " sessionCookie: constants.SESSION_COOKIE\n" +
+    graphConfig = "" +
+      "Vue.use(NetworkGraphQLPlugin, {\n" +
+      "\tbaseURL: 'your api URL goes here',\n" +
+      "\tsessionCookie: constants.SESSION_COOKIE\n" +
       "});\n";
   }
 
@@ -87,7 +138,8 @@ function stylesDependencies(cssFramework) {
   }
   if (cssFramework === 'bulma') {
     return {
-      'bulma': '^0.8.2'
+      'bulma': '^0.9.0',
+      'buefy': '^0.9.0'
     }
   }
 }
@@ -123,6 +175,7 @@ function networkDependencies(options) {
 function updatePackage(api, options) {
   let apokAdminVersion = "^0.1.1-rc.10";
   let apokAdminComponentsVersion = "^1.0.1-rc.15";
+  let apokAdminChartsVersion = "^1.0.0-rc.1";
 
   /**Framework option chosen by user trough console*/
   const components = options.cssFramework.toLowerCase();
@@ -130,6 +183,7 @@ function updatePackage(api, options) {
   if (mode === "dev") {
     apokAdminVersion = "file:../plugin_nuevo/apok-admin";
     apokAdminComponentsVersion = `file:../plugin_nuevo/apok-admin-components-${components}`;
+    apokAdminChartsVersion = "file:../plugin_nuevo/apok-admin-charts";
   }
 
   /**Apok-admin necessary dependencies*/
@@ -145,16 +199,14 @@ function updatePackage(api, options) {
     "lodash.camelcase": "^4.3.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.chunk": "^4.2.0",
-    "moment": "^2.24.0",
     ...iconDependencies(options.icons),
     ...stylesDependencies(options.cssFramework),
     ...networkDependencies(options),
+    ...chartDependencies(options.charts, apokAdminChartsVersion),
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1",
     "vuex-i18n": "^1.11.0",
     "register-service-worker": "^1.6.2",
-    "vue-chartjs": "^3.5.0",
-    "chart.js": "^2.9.3"
   };
 
   /*Chosen CSS Components*/
@@ -199,38 +251,37 @@ module.exports = (api, options) => {
   api.render("./template");
 
   api.injectImports(api.entryFile, `import ${components}AdminComponents from '@apok/admin-components-${components.toLowerCase()}';`);
+  if(options.charts){
+    api.injectImports(api.entryFile, `import ChartAdminComponent from '@apok/admin-charts';`);
+  }
   api.injectImports(api.entryFile, `import './config/index';`);
   api.injectImports(api.entryFile, `import router from './router';`);
   api.injectImports(api.entryFile, `import store from './store/index';`);
   api.injectRootOptions(api.entryFile, ["store", "router"]);
 
-  api.afterInvoke(()=> {
-    let mainContent = fs.readFileSync(api.resolve(api.entryFile), {encoding: "utf-8"});
-    const newContent = `\n\nVue.use(${components}AdminComponents, {});\n`;
-    mainContent += newContent;
-    fs.writeFileSync(api.entryFile, mainContent, {enconding: "utf-8"});
-  })
-
   const adminConfigFile = 'src/config/admin.js';
   if (options.restClient) {
-      api.injectImports(
-        adminConfigFile,
-        `import NetworkRestPlugin from "@apok/admin/vue/plugins/network/rest/NetworkRestPlugin";`
-      );
+    api.injectImports(
+      adminConfigFile,
+      `import NetworkRestPlugin from "@apok/admin/vue/plugins/network/rest/NetworkRestPlugin";`);
     }
-    if (options.graphQLClient) {
-      api.injectImports(
-        adminConfigFile,
-        `import NetworkGraphQLPlugin from "@apok/admin/vue/plugins/network/graphql/NetworkGraphQLPlugin";`
-      );
-    }
+  if (options.graphQLClient) {
+    api.injectImports(
+      adminConfigFile,
+      `import NetworkGraphQLPlugin from "@apok/admin/vue/plugins/network/graphql/NetworkGraphQLPlugin";`
+    );
+  }
 
   api.exitLog('Done!!', 'done');
 
   api.onCreateComplete(() => {
     fixStyles(options);
     fixRoutesFile(options);
-    networkPluginInstall(adminConfigFile, options)
+    networkPluginInstall(adminConfigFile, options);
+    fs.appendFileSync(api.entryFile, `\nVue.use(${components}AdminComponents, {});\n`, 'utf8');
+    if(options.charts){
+      fs.appendFileSync(api.entryFile, `Vue.use(ChartAdminComponent);\n`, 'utf8');
+    }
   });
 
   //console.log(api.genJSConfig(options));
