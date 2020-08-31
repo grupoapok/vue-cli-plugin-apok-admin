@@ -175,7 +175,7 @@ function networkDependencies(options) {
 function updatePackage(api, options) {
   const components = options.cssFramework.toLowerCase();
 
-  let apokAdminVersion = "^0.1.1-rc.11";
+  let apokAdminVersion = "^0.1.1-rc.12";
   let apokAdminComponentsVersion = '';
   switch(components){
     case 'bootstrap': {
