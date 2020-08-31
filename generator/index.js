@@ -173,12 +173,23 @@ function networkDependencies(options) {
  * @param options {Object} - Contains prompts.js answers
  */
 function updatePackage(api, options) {
-  let apokAdminVersion = "^0.1.1-rc.10";
-  let apokAdminComponentsVersion = "^1.0.1-rc.15";
+  const components = options.cssFramework.toLowerCase();
+
+  let apokAdminVersion = "^0.1.1-rc.11";
+  let apokAdminComponentsVersion = '';
+  switch(components){
+    case 'bootstrap': {
+      apokAdminComponentsVersion = "^1.0.1-rc.18";
+      break;
+    }
+    case 'bulma': {
+      apokAdminComponentsVersion = "^1.0.1-rc.16";
+      break;
+    }
+  }
   let apokAdminChartsVersion = "^1.0.0-rc.1";
 
   /**Framework option chosen by user trough console*/
-  const components = options.cssFramework.toLowerCase();
 
   if (mode === "dev") {
     apokAdminVersion = "file:../plugin_nuevo/apok-admin";
