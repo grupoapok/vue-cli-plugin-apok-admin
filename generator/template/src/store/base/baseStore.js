@@ -1,7 +1,7 @@
 import { mutations } from './baseMutations';
-import * as actions from './baseActions';
+
 export const storeGenerator = (
-  extraActions = {},
+  actions,
   extraState = {},
   extraMutations = {}
 ) => {
@@ -17,7 +17,7 @@ export const storeGenerator = (
       updating: false,
       ...extraState
     },
-    actions: {...actions, ...extraActions },
+    actions,
     mutations: { ...mutations, ...extraMutations },
   };
 };

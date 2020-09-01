@@ -16,11 +16,18 @@ export const mutations = {
   [GET_ITEM_LIST](state, payload) {
     updateLoading(state, payload.meta);
     if (payload.meta === 'SUCCESS') {
-      state.currentPage = Number.parseInt(payload.data.meta.current_page, 10);
-      state.totalPages = Number.parseInt(payload.data.meta.last_page, 10);
-      state.perPage = Number.parseInt(payload.data.meta.per_page, 10);
+      if (payload.data.meta) {
+        state.currentPage = Number.parseInt(payload.data.meta.current_page, 10);
+        state.totalPages = Number.parseInt(payload.data.meta.last_page, 10);
+        state.perPage = Number.parseInt(payload.data.meta.per_page, 10);
+        state.totalRecords = Number.parseInt(payload.data.meta.total, 10);
+      } else {
+        state.currentPage = 1;
+        state.totalPages = 1;
+        state.perPage = payload.data.data.length;
+        state.totalRecords = payload.data.data.length;
+      }
       state.list[state.currentPage] = payload.data.data;
-      state.totalRecords = Number.parseInt(payload.data.meta.total, 10);
     }
   },
   [GET_ITEM](state, payload) {
@@ -79,7 +86,7 @@ export const mutations = {
       case 'PENDING': {
         Object.keys(state.list).forEach(page => {
           state.list[page].filter(item => item.id === payload.data.id)
-                          .forEach(item => item.deleting = true)
+            .forEach(item => item.deleting = true)
         });
         break;
       }
